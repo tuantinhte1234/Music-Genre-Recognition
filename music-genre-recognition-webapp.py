@@ -4,11 +4,11 @@ import base64
 st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
 st.write("## Know the genre of your favorite musics!")
 
-st.sidebar.write("## Upload the youtube link of a music of your choice:")
+st.sidebar.write("## Upload the youtube url of a music of your choice:")
 #st.sidebar.image("images_webapp/icons8-youtube.gif")
 
 youtube_url = st.sidebar.text_input('',
-                                    "Paste here the music youtube link",
+                                    "Paste here the url...",
                                     key="youtube_url",
                                     label_visibility="collapsed",
                                     )
