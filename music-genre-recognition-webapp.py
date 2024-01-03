@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
 from keras.preprocessing.image import load_img,img_to_array
-from bing_image_downloader import downloader
 
 #begin seeting up webapp title
 st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
