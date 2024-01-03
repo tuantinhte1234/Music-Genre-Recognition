@@ -34,5 +34,5 @@ def mp3_to_wav(mp3_audio):
     return wav_audio, sr    
 
 if mp3_file is not None: 
-    wav_audio, sr = mp3_to_wav(mp3_audio)
+    wav_audio, sr = mp3_to_wav(mp3_file)
     st.sidebar.audio(wav_audio, sample_rate=sr)
