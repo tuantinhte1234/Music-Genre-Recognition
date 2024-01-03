@@ -35,8 +35,6 @@ def mp3_to_wav(mp3_audio):
     return wav_audio, sr    
 
 if mp3_file is not None: 
-    with NamedTemporaryFile(suffix="mp3") as temp:
-        temp.write(mp3_file.getvalue())
-        temp.seek(0)
-        wav_audio, sr = mp3_to_wav(temp)
-        st.sidebar.audio(wav_audio, sample_rate=sr)
+    temp = mp3_file.mktemp('.mp3')
+    wav_audio, sr = mp3_to_wav(temp)
+    st.sidebar.audio(wav_audio, sample_rate=sr)
