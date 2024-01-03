@@ -11,9 +11,33 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.preprocessing.image import load_img,img_to_array
 
-#begin seeting up webapp title
-st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
-st.write("## Know the genre of your favorite musics!")
+
+#begin seeting up webapp title and background
+
+page_bg_img = """
+<style>
+[data-testid="stAppViewContainer"] {
+background-image: url("https://images.unsplash.com/photo-1530176928500-2372a88e00b5?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+background-size: cover;
+background-position: top left;
+background-repeat: no-repeat;
+}
+
+[data-testid="stHeader"] {
+background: rgba(0,0,0,0);
+}
+
+[data-testid="stToolbar"] {
+right: 2rem;
+}
+
+</style>
+"""
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
+#st.title("Music Genre Recognition App")
+st.markdown("<h1 style='text-align: center; color: black;'>Music Genre Recognition App</h1>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color: black;'>Know the genre of your favorite musics! </h2>", unsafe_allow_html=True)  
 
 #define social medias
 col1,col2 = st.sidebar.columns(2)
