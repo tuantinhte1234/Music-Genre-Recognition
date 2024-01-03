@@ -1,6 +1,6 @@
 import streamlit as st
 import base64
-from pytube import YouTube 
+import pytube
 import os
 import subprocess 
 import librosa
@@ -19,7 +19,7 @@ youtube_url = st.sidebar.text_input('',
 
 
 def extract_youtube_mp3(url):
-    video = YouTube(url).streams.filter(only_audio=True).first() 
+    video = pytube.YouTube(url).streams.filter(only_audio=True).first() 
     mp4_audio = video.download() 
     base, ext = os.path.splitext(mp4_audio) 
     mp3_audio = base + '.mp3'
