@@ -1,1 +1,4 @@
 ffmpeg
+librosa
+pytube
+streamlit
