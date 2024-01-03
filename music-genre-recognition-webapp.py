@@ -57,8 +57,8 @@ class_labels = ['blues', 'classical', 'country', 'disco', 'pop', 'hiphop', 'jazz
     
 
 #convert mp3 file to wav and listen to it
-if mp3_file is not None:  
-  st.sidebar.write("**Play the Song Below if you want!**")
+if mp3_file is not None:    
+  st.sidebar.write("**Play the song below if you want!**")
   st.sidebar.audio(mp3_file,"audio/mp3")
     
   convert_mp3_to_wav(mp3_file)
