@@ -31,7 +31,7 @@ def mp3_to_wav(mp3_audio):
     wav_audio, sr = librosa.load('converted_to_wav_file.wav')
     return wav_audio, sr
 
-mp3_audio = extract_youtube_mp3(youtube_url)
-wav_audio, sr = mp3_to_wav(mp3_audio)
+#mp3_audio = extract_youtube_mp3(youtube_url)
+#wav_audio, sr = mp3_to_wav(mp3_audio)
 
-st.sidebar.audio(wav_audio, sample_rate=sr)
+#st.sidebar.audio(wav_audio, sample_rate=sr)
