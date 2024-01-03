@@ -1,5 +1,9 @@
 import streamlit as st
 import base64
+from pytube import YouTube 
+import os
+import subprocess 
+import librosa
 
 st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
 st.write("## Know the genre of your favorite musics!")
@@ -14,5 +18,20 @@ youtube_url = st.sidebar.text_input('',
                                     )
 
 
+def extract_youtube_mp3(url):
+    video = YouTube(url).streams.filter(only_audio=True).first() 
+    mp4_audio = video.download() 
+    base, ext = os.path.splitext(mp4_audio) 
+    mp3_audio = base + '.mp3'
+    os.rename(out_file, mp3_audio) 
+    return mp3_audio
 
-#<a  href="https://icons8.com/icon/37326/youtube">YouTube</a> icon by <a href="https://icons8.com">Icons8</a>
+def mp3_to_wav(mp3_audio):
+    subprocess.call(['ffmpeg', '-i', mp3_audio, os.path.splitext(mp3_audio)[0] + '.wav'])
+    wav_audio, sr = librosa.load('converted_to_wav_file.wav')
+    return wav_audio, sr
+
+mp3_audio = extract_youtube_mp3(youtube_url)
+wav_audio, sr = mp3_to_wav(mp3_audio)
+
+st.sidebar.audio(wav_audio, sample_rate=sr)
