@@ -26,7 +26,7 @@ col2.markdown(github, unsafe_allow_html=True)
 
 # upload mp3 file and visualize it
 st.sidebar.write("## Upload the mp3 file of a music of your choice:")
-mp3_file = st.sidebar.file_uploader(type=["mp3"], label_visibility="hidden")
+mp3_file = st.sidebar.file_uploader("Upload an audio file", type=["mp3"], label_visibility="collapsed")
 
 
 #define function to convert mp3 to wav format
