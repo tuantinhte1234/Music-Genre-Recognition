@@ -9,6 +9,9 @@ st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
 st.write("## Know the genre of your favorite musics!")
 
 st.sidebar.write("## Upload the mp3 file of a music of your choice:")
+
+mp3_file = st.sidebar.file_uploader("Choose a file")
+
 #st.sidebar.image("images_webapp/icons8-youtube.gif")
 
 #youtube_url = st.sidebar.text_input('',
@@ -24,8 +27,6 @@ st.sidebar.write("## Upload the mp3 file of a music of your choice:")
 #    mp3_audio = base + '.mp3'
 #    os.rename(mp4_audio, mp3_audio) 
 #    return mp3_audio
-
-mp3_file = st.file_uploader("Choose a file")
 
 def mp3_to_wav(mp3_audio):
     subprocess.call(['ffmpeg', '-i', mp3_audio, os.path.splitext(mp3_audio)[0] + '.wav'])
