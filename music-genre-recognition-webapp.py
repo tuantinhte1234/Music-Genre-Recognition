@@ -7,7 +7,10 @@ import librosa
 import tempfile 
 from pydub import AudioSegment
 import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow import keras
 from keras.preprocessing.image import load_img,img_to_array
+from bing_image_downloader import downloader
 
 #begin seeting up webapp title
 st.set_page_config(layout="wide", page_title="Music Genre Recognition App")
@@ -47,20 +50,23 @@ def predict(image_data, model):
     image = img_to_array(image_data)   
     image = np.reshape(image,(1,100,200,4))   
     prediction = model.predict(image/255)   
-    prediction = prediction.reshape((9,))     
+    prediction = prediction.reshape((10,))     
     class_label = np.argmax(prediction)     
     return class_label, prediction
 
-class_labels = ['blues', 'classical', 'country', 'disco', 'hiphop', 'metal', 'pop', 'reggae', 'rock']
+class_labels = ['blues', 'classical', 'country', 'disco', 'pop', 'hiphop', 'jazz', 'metal', 'reggae', 'rock']
     
 
 #convert mp3 file to wav and listen to it
 if mp3_file is not None:  
-  st.sidebar.audio(mp3_file,"audio/mp3")  
+  filename = download_image(mp3_file)
+  st.sidebar.write("**Play the Song Below if you want!**")
+  st.sidebar.audio(mp3_file,"audio/mp3")
+    
   convert_mp3_to_wav(mp3_file)
+  
   create_melspectrogram("music_file.wav")
   image_data = load_img('melspectrogram.png', color_mode='rgba', target_size=(100,200))   
-  st.sidebar.image('melspectrogram.png')
         
         
     
