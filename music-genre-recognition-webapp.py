@@ -10,7 +10,7 @@ st.write("## Know the genre of your favorite musics!")
 
 st.sidebar.write("## Upload the mp3 file of a music of your choice:")
 
-mp3_file = st.sidebar.file_uploader("Choose a file")
+mp3_file = st.sidebar.file_uploader("Upload an audio file", type=["mp3"])
 
 #st.sidebar.image("images_webapp/icons8-youtube.gif")
 
@@ -34,5 +34,8 @@ def mp3_to_wav(mp3_audio):
     return wav_audio, sr    
 
 if mp3_file is not None: 
-    wav_audio, sr = mp3_to_wav(mp3_file)
-    st.sidebar.audio(wav_audio, sample_rate=sr)
+    with NamedTemporaryFile(suffix="mp3") as temp:
+        temp.write(mp3_file.getvalue())
+        temp.seek(0)
+        wav_audio, sr = mp3_to_wav(temp)
+        st.sidebar.audio(wav_audio, sample_rate=sr)
