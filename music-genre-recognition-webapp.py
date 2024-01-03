@@ -12,7 +12,7 @@ st.sidebar.write("## Upload the youtube url of a music of your choice:")
 #st.sidebar.image("images_webapp/icons8-youtube.gif")
 
 youtube_url = st.sidebar.text_input('',
-                                    "Paste here the url...",
+                                    placeholder="Paste here the url...",
                                     key="youtube_url",
                                     label_visibility="collapsed",
                                     )
