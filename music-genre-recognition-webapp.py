@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 import base64
 import pytube
@@ -7,12 +8,21 @@ import librosa
 import tempfile 
 from pydub import AudioSegment
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+from matplotlib.colors import Normalize
 import tensorflow as tf
 from tensorflow import keras
+from keras import regularizers
 from keras.preprocessing.image import load_img,img_to_array
+from tensorflow.keras.models import Model, Sequential, load_model
+from tensorflow.keras.layers import (Input, Add, Dense, Activation, ZeroPadding2D, BatchNormalization, 
+                                     Flatten, Conv2D, AveragePooling2D, MaxPooling2D, GlobalMaxPooling2D,
+                                     Dropout)
 
 
-#begin seeting up webapp title and background
+
+st.set_page_config(page_title="Music Genre Recognition App", layout="centered")
+
 
 page_bg_img = """
 <style>
@@ -34,25 +44,6 @@ right: 2rem;
 </style>
 """
 
-st.markdown(page_bg_img, unsafe_allow_html=True)
-#st.title("Music Genre Recognition App")
-st.markdown("<h1 style='text-align: center; color: black;'>Music Genre Recognition App</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='text-align: center; color: black;'>Know the genre of your favorite musics! </h2>", unsafe_allow_html=True)  
-
-#define social medias
-col1,col2 = st.sidebar.columns(2)
-
-linked_in = '''[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/120px-LinkedIn_Logo.svg.png)](https://www.linkedin.com/in/david-iss%C3%A1/)'''
-col1.markdown(linked_in, unsafe_allow_html=True)
-github = '''[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/GitHub_logo_2013.svg/120px-GitHub_logo_2013.svg.png)](https://github.com/davidissa99)'''
-col2.markdown(github, unsafe_allow_html=True)
-
-
-# upload mp3 file and visualize it
-st.sidebar.write("## Upload the mp3 file of a music of your choice:")
-mp3_file = st.sidebar.file_uploader("Upload an audio file", type=["mp3"], label_visibility="collapsed")
-
-
 #define function to convert mp3 to wav format
 def convert_mp3_to_wav(music_file):  
     sound = AudioSegment.from_mp3(music_file)
@@ -68,6 +59,44 @@ def create_melspectrogram(wav_file):
     plt.margins(0)
     plt.savefig('melspectrogram.png')
 
+#define function to build CNN model
+def GenreModel(input_shape = (100,200,4),classes=9):
+    
+    X_input = Input(input_shape)
+    
+    classifier = Sequential()
+
+    classifier.add(Conv2D(8, (3, 3), input_shape = input_shape, activation = 'relu'))
+    classifier.add(Activation('relu'))
+    classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+    classifier.add(Conv2D(16, (3, 3), activation = 'relu'))
+    classifier.add(Activation('relu'))
+    classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+    classifier.add(Conv2D(32, (3, 3), activation = 'relu'))
+    classifier.add(Activation('relu'))
+    classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+    classifier.add(Conv2D(64, (3, 3), activation = 'relu'))
+    classifier.add(Activation('relu'))
+    classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+    classifier.add(Conv2D(128, (3, 3), activation = 'relu'))
+    classifier.add(Activation('relu'))
+    classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+    classifier.add(Flatten())
+    
+    classifier.add(Dropout(0.5))
+    classifier.add(Dense(units = 256, activation = 'relu', kernel_regularizer=regularizers.l2(0.0001)))
+    classifier.add(Dropout(0.25))
+    classifier.add(Dense(units = 10, activation = 'softmax'))
+
+    classifier.compile(optimizer = 'adam', loss = 'categorical_crossentropy', metrics='accuracy')
+    
+    return classifier
+
 #define function to predict music genre based on mel spectogram
 def predict(image_data, model):   
     image = img_to_array(image_data)   
@@ -77,10 +106,33 @@ def predict(image_data, model):
     class_label = np.argmax(prediction)     
     return class_label, prediction
 
+
 class_labels = ['blues', 'classical', 'country', 'disco', 'pop', 'hiphop', 'jazz', 'metal', 'reggae', 'rock']
     
+    
+#configure bacckground
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
-#convert mp3 file to wav and listen to it
+
+#configure main titles
+st.markdown("<h1 style='text-align: center; color: black;'>Music Genre Recognition App</h1>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color: black;'>Know the genre of your favorite musics! </h3>", unsafe_allow_html=True)  
+
+
+#configure sidebar - define social medias
+col1,col2 = st.sidebar.columns(2)
+linked_in = '''[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/120px-LinkedIn_Logo.svg.png)](https://www.linkedin.com/in/david-iss%C3%A1/)'''
+col1.markdown(linked_in, unsafe_allow_html=True)
+github = '''[![LinkedIn](https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/GitHub_logo_2013.svg/120px-GitHub_logo_2013.svg.png)](https://github.com/davidissa99)'''
+col2.markdown(github, unsafe_allow_html=True)
+
+
+#configure sidebar - upload mp3 file and visualize it
+st.sidebar.write("## Upload the mp3 file of a music of your choice:")
+mp3_file = st.sidebar.file_uploader("Upload an audio file", type=["mp3"], label_visibility="collapsed")    
+
+
+#configure model prediction and content to appear when music is uploaded
 if mp3_file is not None:    
   st.sidebar.write("**Play the song below if you want!**")
   st.sidebar.audio(mp3_file,"audio/mp3")
@@ -89,6 +141,29 @@ if mp3_file is not None:
   
   create_melspectrogram("music_file.wav")
   image_data = load_img('melspectrogram.png', color_mode='rgba', target_size=(100,200))   
-        
-        
-    
+  
+  model = GenreModel(input_shape=(100,200,4),classes=10)
+  model.load_weights("music_genre_recog_model.h5")
+  
+  class_label, prediction = predict(image_data, model)
+  
+  st.markdown("<h4 style='text-align: center; color: black;'>The genre of your song is: {} </h4>".format(class_labels[class_label]), unsafe_allow_html=True) 
+  st.markdown("<h4 style='text-align: center; color: black;'></h4>", unsafe_allow_html=True) 
+
+  prediction = prediction.reshape((10,)) 
+  
+  color_data = [1,2,3,4,5,6,7,8,9,10]
+  my_cmap = cm.get_cmap('Blues')
+  my_norm = Normalize(vmin=0, vmax=10)
+  
+  fig,ax= plt.subplots(figsize=(10,5))
+  ax.bar(x=class_labels,height=prediction,
+  color=my_cmap(my_norm(color_data)))
+  ax.spines['top'].set_visible(False)
+  ax.spines['right'].set_visible(False)
+  ax.spines['left'].set_visible(False)
+  ax.spines['bottom'].set_color('#DDDDDD')
+  ax.tick_params(bottom=False, left=False)
+  plt.savefig("prob_distribution_genres.eps",format='eps', dpi=1000, transparent=True)
+  st.image("prob_distribution_genres.eps", use_column_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
+
