@@ -157,19 +157,21 @@ if mp3_file is not None:
       predictions_total.append(prediction)
   
   class_label_final = mode(class_labels_total)
-  #color_data = [1,2,3,4,5,6,7,8,9,10]
-  #my_cmap = cm.get_cmap('Blues')
-  #my_norm = Normalize(vmin=0, vmax=10)
-  #fig,ax= plt.subplots(figsize=(10,5))
-  #ax.bar(x=class_labels,height=prediction, color=my_cmap(my_norm(color_data)))
-  #ax.spines['top'].set_visible(False)
-  #ax.spines['right'].set_visible(False)
-  #ax.spines['left'].set_visible(False)
-  #ax.spines['bottom'].set_color('#DDDDDD')
-  #ax.tick_params(bottom=False, left=False)
-  #plt.savefig("prob_distribution_genres.png",format='b png', dpi=1000, transparent=True)
+  predictions_final = np.mean(predictions_total, axis=0)
+  
+  color_data = [1,2,3,4,5,6,7,8,9,10]
+  my_cmap = cm.get_cmap('Blues')
+  my_norm = Normalize(vmin=0, vmax=10)
+  fig,ax= plt.subplots(figsize=(10,5))
+  ax.bar(x=class_labels,height=predictions_final, color=my_cmap(my_norm(color_data)))
+  ax.spines['top'].set_visible(False)
+  ax.spines['right'].set_visible(False)
+  ax.spines['left'].set_visible(False)
+  ax.spines['bottom'].set_color('#DDDDDD')
+  ax.tick_params(bottom=False, left=False)
+  plt.savefig("prob_distribution_genres.png",format='png', dpi=1000, transparent=True)
   
   st.markdown("<h4 style='text-align: center; color: black;'>The genre of your song is: {} </h4>".format(class_labels[class_label_final]), unsafe_allow_html=True) 
   st.markdown("<h4 style='text-align: center; color: black;'></h4>", unsafe_allow_html=True) 
-  #st.image("prob_distribution_genres.png", use_column_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
+  st.image("prob_distribution_genres.png", use_column_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
 
