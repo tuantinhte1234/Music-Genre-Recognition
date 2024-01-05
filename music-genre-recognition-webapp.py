@@ -164,6 +164,6 @@ if mp3_file is not None:
   ax.spines['left'].set_visible(False)
   ax.spines['bottom'].set_color('#DDDDDD')
   ax.tick_params(bottom=False, left=False)
-  plt.savefig("prob_distribution_genres.eps",format='eps', dpi=1000, transparent=True)
-  st.image("prob_distribution_genres.eps", use_column_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
+  plt.savefig("prob_distribution_genres.svg",format='svg', dpi=1000, transparent=True)
+  st.image("prob_distribution_genres.svg", use_column_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
 
