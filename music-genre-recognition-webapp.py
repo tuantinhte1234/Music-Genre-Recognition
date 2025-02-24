@@ -173,4 +173,5 @@ if mp3_file is not None:
   
   st.markdown("<h4 style='text-align: center; color: black;'>The genre of your song is: {} </h4>".format(class_labels[class_label_final]), unsafe_allow_html=True) 
   st.markdown("<h4 style='text-align: center; color: black;'></h4>", unsafe_allow_html=True) 
- 
+  st.image("prob_distribution_genres.png", use_container_width=True, caption="Probability Distribution Of The Given Song Over Different Genres")
+
