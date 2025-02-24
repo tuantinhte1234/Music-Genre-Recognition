@@ -9,6 +9,8 @@ import tempfile
 from pydub import AudioSegment
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import numpy as np
+import seaborn as sns
 from matplotlib.colors import Normalize
 import tensorflow as tf
 from statistics import mode
