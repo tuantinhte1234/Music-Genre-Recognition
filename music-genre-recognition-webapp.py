@@ -70,7 +70,7 @@ with st.sidebar:
     )
 
 # Nếu chọn "Classify", hiển thị nội dung này
-if menu == "📊 Classify":
+if menu == "Classify":
     st.markdown("<h1 style='text-align: center; color: white;'>Music Genre Recognition</h1>", unsafe_allow_html=True)
 
     # Upload file mp3
