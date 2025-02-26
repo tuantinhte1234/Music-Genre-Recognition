@@ -28,7 +28,7 @@ st.markdown(
     """
     <style>
         [data-testid="stSidebar"] {
-            background-image: url("https://media.giphy.com/media/l4EpkVLQ6vE6xTOwI/giphy.gif");
+            background-image: url("https://cdn.pixabay.com/photo/2024/02/26/14/13/sky-8598072_1280.jpg");
             background-size: cover;
         }
         .css-1d391kg {
