@@ -57,7 +57,7 @@ with st.sidebar:
     )
     menu = option_menu(
         menu_title="Navigation",
-        options=["🏠 Home", "🎤 Create Lyric", "🎶 Feel The Beat", "📊 Classify", "🌎 Explore", "📚 Library", "🔍 Search"],
+        options=["Home", "Create Lyric", "Feel The Beat", "Classify", "Explore", "Library", "Search"],
         icons=["house", "music-note-list", "soundwave", "graph-up", "globe", "book", "search"],
         menu_icon="menu-button-wide",
         default_index=0,
