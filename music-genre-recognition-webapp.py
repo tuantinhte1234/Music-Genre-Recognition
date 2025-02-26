@@ -51,8 +51,10 @@ st.markdown(
 
 # Tạo menu Sidebar có icon
 with st.sidebar:
-    st.image("https://media.giphy.com/media/xThtapIXXGuYEnqNgU/giphy.gif", use_container_width=True)
-
+    st.markdown(
+        '<img src="https://media.giphy.com/media/xThtapIXXGuYEnqNgU/giphy.gif" width="100%">',
+        unsafe_allow_html=True
+    )
     menu = option_menu(
         menu_title="Navigation",
         options=["🏠 Home", "🎤 Create Lyric", "🎶 Feel The Beat", "📊 Classify", "🌎 Explore", "📚 Library", "🔍 Search"],
