@@ -20,6 +20,7 @@ from tensorflow.keras.layers import (Conv2D, MaxPooling2D, Flatten, Dropout, Den
 from streamlit_option_menu import option_menu
 import time
 from openai import OpenAI  
+import openai  
 
 # Cấu hình trang
 st.set_page_config(page_title="Music AI Website", layout="wide")
@@ -70,9 +71,8 @@ with st.sidebar:
         }
     )
     
-api_key = st.secrets["OPENAI_API_KEY"]
-
-client = OpenAI(api_key=api_key)
+os.environ["OPENAI_API_KEY"] = api_key  
+client = openai.OpenAI()
 
 # Định nghĩa system prompt để giới hạn GPT-4 chỉ viết lời bài hát  
 system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
