@@ -71,39 +71,38 @@ with st.sidebar:
         }
     )
     
+def generate_lyrics(api_key, prompt):
+    try:
+        client = openai.OpenAI(api_key=api_key)
+        response = client.completions.create(
+            model="gpt-4",
+            prompt=f"Viết lời bài hát về: {prompt}\n",
+            max_tokens=150
+        )
+        return response.choices[0].text.strip()
+    except Exception as e:
+        return f"Lỗi: {str(e)}"
+
+# Sidebar: Create Lyrics
 if menu == "Create Lyric":
-    st.markdown("<h1 style='text-align: center; color: white;'>AI Lyric Generator</h1>", unsafe_allow_html=True)
+    st.markdown("## 🎵 Create Your Own Lyrics")
     
-    # Nhập API Key
-    api_key = st.text_input("🔑 Nhập OpenAI API Key:", type="password")
+    # Ô nhập API Key
+    api_key = st.text_input("Nhập API Key OpenAI:", type="password")
     
-    # Nhập ý tưởng bài hát
-    user_idea = st.text_area("💡 Nhập ý tưởng bài hát:", placeholder="Nhập chủ đề, cảm xúc, hoặc dòng đầu tiên của bài hát...")
+    # Ô nhập chủ đề lời bài hát
+    song_idea = st.text_area("Nhập ý tưởng cho bài hát của bạn:")
     
     # Nút tạo lời bài hát
-    if st.button("🎶 Generate Lyrics"):
-        if not api_key:
-            st.error("❌ Vui lòng nhập OpenAI API Key!")
-        elif not user_idea:
-            st.error("❌ Vui lòng nhập ý tưởng bài hát!")
+    if st.button("Generate Lyrics"):
+        if api_key and song_idea:
+            with st.spinner("Đang tạo lời bài hát..."):
+                lyrics = generate_lyrics(api_key, song_idea)
+                st.success("🎶 Lời bài hát của bạn:")
+                st.write(lyrics)
         else:
-            with st.spinner("🎤 AI đang sáng tác lời bài hát..."):
-                try:
-                    # Kết nối API OpenAI
-                    client = openai.OpenAI(api_key=api_key)
-                    response = client.completions.create(
-                        model="gpt-4",
-                        prompt=f"Viết lời bài hát dựa trên ý tưởng sau:\n{user_idea}\n\nLời bài hát:",
-                        max_tokens=200
-                    )
-                    lyrics = response.choices[0].text.strip()
-                    
-                    # Hiển thị kết quả
-                    st.success("🎼 Lời bài hát của bạn:")
-                    st.write(lyrics)
+            st.warning("Vui lòng nhập API Key và ý tưởng bài hát!")
 
-                except openai.OpenAIError as e:
-                    st.error(f"❌ Lỗi API: {str(e)}")
 
 
 # Nếu chọn "Classify", hiển thị nội dung này
