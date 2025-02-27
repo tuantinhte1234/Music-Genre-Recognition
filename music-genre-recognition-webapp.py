@@ -19,7 +19,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (Conv2D, MaxPooling2D, Flatten, Dropout, Dense, Activation)
 from streamlit_option_menu import option_menu
 import time
-import openai
+from openai import OpenAI  
 
 # Cấu hình trang
 st.set_page_config(page_title="Music AI Website", layout="wide")
