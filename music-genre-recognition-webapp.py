@@ -71,7 +71,7 @@ with st.sidebar:
     )
 
 # Cấu hình API OpenAI
-openai.api_key = "YOUR_OPENAI_API_KEY"
+openai.api_key = "proj_L2KyIJQiKICtfxNYXIvbgwiI"
 
 def generate_lyrics(prompt):
     system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
