@@ -84,24 +84,46 @@ def generate_lyrics(api_key, prompt):
         return f"Lỗi: {str(e)}"
 
 # Sidebar: Create Lyrics
-if menu == "Create Lyric":
-    st.markdown("## 🎵 Create Your Own Lyrics")
-    
-    # Ô nhập API Key
-    api_key = st.text_input("Nhập API Key OpenAI:", type="password")
-    
-    # Ô nhập chủ đề lời bài hát
-    song_idea = st.text_area("Nhập ý tưởng cho bài hát của bạn:")
-    
-    # Nút tạo lời bài hát
-    if st.button("Generate Lyrics"):
-        if api_key and song_idea:
-            with st.spinner("Đang tạo lời bài hát..."):
-                lyrics = generate_lyrics(api_key, song_idea)
-                st.success("🎶 Lời bài hát của bạn:")
-                st.write(lyrics)
+# --- Tạo Lời Bài Hát Bằng AI ---
+if menu == "Create Lyrics":
+    st.title("🎼 Tạo Lời Bài Hát Bằng AI")
+
+    # Nhập API Key
+    api_key = st.text_input("🔑 Nhập API Key của bạn:", type="password")
+
+    # Nhập ý tưởng bài hát
+    song_idea = st.text_area("💡 Nhập ý tưởng cho bài hát:", placeholder="Viết về tình yêu, mùa thu, hoặc bất kỳ điều gì bạn muốn...")
+
+    # Xử lý khi người dùng nhấn nút tạo lời bài hát
+    if st.button("✨ Tạo Lời Bài Hát"):
+        if not api_key:
+            st.warning("⚠️ Vui lòng nhập API Key!")
+        elif not song_idea:
+            st.warning("⚠️ Vui lòng nhập ý tưởng bài hát!")
         else:
-            st.warning("Vui lòng nhập API Key và ý tưởng bài hát!")
+            try:
+                # Tạo client OpenAI (Cách Mới)
+                client = openai.OpenAI(api_key=api_key)
+
+                # Gửi yêu cầu đến OpenAI GPT
+                response = client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[{"role": "user", "content": f"Viết lời bài hát theo phong cách chuyên nghiệp dựa trên ý tưởng: {song_idea}"}],
+                    max_tokens=300
+                )
+
+                # Lấy nội dung trả về từ API
+                lyrics = response.choices[0].message.content.strip()
+
+                # Hiển thị kết quả
+                st.subheader("🎶 Lời Bài Hát Của Bạn:")
+                st.text_area("📜", lyrics, height=300)
+
+            except openai.OpenAIError as e:
+                st.error(f"🚨 Lỗi từ OpenAI: {e}")
+            except Exception as e:
+                st.error(f"🚨 Lỗi hệ thống: {e}")
+
 
 # --- Tạo Lời Bài Hát Bằng AI ---
 if menu == "Create Lyrics":
