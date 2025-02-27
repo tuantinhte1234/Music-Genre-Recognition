@@ -69,22 +69,22 @@ with st.sidebar:
             "nav-link-selected": {"background-color": "#ff7e5f"},
         }
     )
-
-# Cấu hình API OpenAI
-openai.api_key = "proj_L2KyIJQiKICtfxNYXIvbgwiI"
-
-def generate_lyrics(prompt):
-    system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
     
-    response = openai.ChatCompletion.create(
+client = OpenAI(api_key="proj_L2KyIJQiKICtfxNYXIvbgwiI")  
+
+# Định nghĩa system prompt để giới hạn GPT-4 chỉ viết lời bài hát  
+system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
+
+def generate_lyrics(topic):  
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    
-    return response["choices"][0]["message"]["content"]
+            {"role": "system", "content": system_prompt},  
+            {"role": "user", "content": f"Viết lời bài hát về chủ đề: {topic}"}
+        ],
+        max_tokens=200  
+    )  
+    return response.choices[0].message.content  
 
 if menu == "Create Lyric":
     st.markdown("<h1 style='text-align: center;'>🎵 AI Lyric Generator 🎵</h1>", unsafe_allow_html=True)
