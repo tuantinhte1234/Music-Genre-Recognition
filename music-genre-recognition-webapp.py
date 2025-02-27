@@ -74,36 +74,32 @@ with st.sidebar:
 if menu == "Create Lyric":
     st.markdown("<h1 style='text-align: center;'>🎵 AI Lyric Generator 🎵</h1>", unsafe_allow_html=True)
 
-    # Ô nhập API Key (ẩn ký tự nhập vào)
-    api_key = st.text_input("Nhập OpenAI API Key:", type="password")
-
-    # Kiểm tra nếu API Key đã nhập, lưu vào session
+    # Ô nhập API Key
+    api_key = st.text_input("🔑 Nhập OpenAI API Key:", type="password")
+    
+    # Lưu API Key vào session_state
     if api_key:
         st.session_state["openai_api_key"] = api_key
 
-    topic = st.text_input("Nhập chủ đề bài hát:")
+    topic = st.text_input("🎶 Nhập chủ đề bài hát:")
 
     if st.button("Tạo lời bài hát"):
-        if topic.strip():
-            if "openai_api_key" in st.session_state:
-                client = openai.OpenAI(api_key=st.session_state["openai_api_key"])
-
-                with st.spinner("🎶 Đang sáng tác lời nhạc..."):
-                    try:
-                        response = client.chat.completions.create(
-                            model="gpt-4",
-                            messages=[
-                                {"role": "system", "content": system_prompt},
-                                {"role": "user", "content": f"Viết lời bài hát về chủ đề: {topic}"}
-                            ],
-                            max_tokens=200
-                        )
-                        lyrics = response.choices[0].message.content
-                        st.text_area("Lời bài hát:", lyrics, height=300)
-                    except Exception as e:
-                        st.error(f"Lỗi khi gọi API: {e}")
-            else:
-                st.warning("Vui lòng nhập API Key trước khi tạo lời bài hát!")
+        if not api_key:
+            st.warning("Vui lòng nhập API Key trước khi tạo lời bài hát!")
+        elif topic.strip():
+            with st.spinner("🎶 Đang sáng tác lời nhạc..."):
+                client = openai.OpenAI(api_key=st.session_state["openai_api_key"])  # Dùng API Key từ session_state
+                
+                response = client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {"role": "system", "content": "Bạn là một AI chuyên viết lời bài hát."},
+                        {"role": "user", "content": f"Viết lời bài hát về chủ đề: {topic}"}
+                    ],
+                    max_tokens=200  
+                )
+                lyrics = response.choices[0].message.content  
+                st.text_area("📜 Lời bài hát:", lyrics, height=300)
         else:
             st.warning("Vui lòng nhập chủ đề bài hát!")
 
