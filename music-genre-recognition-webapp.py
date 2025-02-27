@@ -71,21 +71,11 @@ with st.sidebar:
         }
     )
     
-def generate_lyrics(api_key, prompt):
-    try:
-        client = openai.OpenAI(api_key=api_key)
-        response = client.completions.create(
-            model="gpt-4",
-            prompt=f"Viết lời bài hát về: {prompt}\n",
-            max_tokens=150
-        )
-        return response.choices[0].text.strip()
-    except Exception as e:
-        return f"Lỗi: {str(e)}"
+
 
 # Sidebar: Create Lyrics
 # --- Tạo Lời Bài Hát Bằng AI ---
-if menu == "Create Lyrics":
+if menu == "Create Lyric":
     st.title("🎼 Tạo Lời Bài Hát Bằng AI")
 
     # Nhập API Key
