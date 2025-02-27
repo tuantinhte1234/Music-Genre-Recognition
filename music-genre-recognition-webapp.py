@@ -71,35 +71,7 @@ with st.sidebar:
         }
     )
     
-os.environ["OPENAI_API_KEY"] = api_key  
-client = openai.OpenAI()
 
-# Định nghĩa system prompt để giới hạn GPT-4 chỉ viết lời bài hát  
-system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
-
-def generate_lyrics(topic):  
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": system_prompt},  
-            {"role": "user", "content": f"Viết lời bài hát về chủ đề: {topic}"}
-        ],
-        max_tokens=200  
-    )  
-    return response.choices[0].message.content  
-
-if menu == "Create Lyric":
-    st.markdown("<h1 style='text-align: center;'>🎵 AI Lyric Generator 🎵</h1>", unsafe_allow_html=True)
-    
-    topic = st.text_input("Nhập chủ đề bài hát:")
-    
-    if st.button("Tạo lời bài hát"):
-        if topic.strip():
-            with st.spinner("🎶 Đang sáng tác lời nhạc..."):
-                lyrics = generate_lyrics(f"Viết lời bài hát về chủ đề: {topic}")
-                st.text_area("Lời bài hát:", lyrics, height=300)
-        else:
-            st.warning("Vui lòng nhập chủ đề bài hát!")
 
 # Nếu chọn "Classify", hiển thị nội dung này
 if menu == "Classify":
