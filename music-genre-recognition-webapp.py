@@ -19,6 +19,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import (Conv2D, MaxPooling2D, Flatten, Dropout, Dense, Activation)
 from streamlit_option_menu import option_menu
 import time
+import openai
 
 # Cấu hình trang
 st.set_page_config(page_title="Music AI Website", layout="wide")
@@ -68,6 +69,35 @@ with st.sidebar:
             "nav-link-selected": {"background-color": "#ff7e5f"},
         }
     )
+
+# Cấu hình API OpenAI
+openai.api_key = "YOUR_OPENAI_API_KEY"
+
+def generate_lyrics(prompt):
+    system_prompt = "Bạn là một AI chuyên viết lời bài hát. Bạn chỉ có thể sáng tác nhạc và không thể trả lời các câu hỏi ngoài lĩnh vực này."
+    
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+    )
+    
+    return response["choices"][0]["message"]["content"]
+
+if menu == "Create Lyric":
+    st.markdown("<h1 style='text-align: center;'>🎵 AI Lyric Generator 🎵</h1>", unsafe_allow_html=True)
+    
+    topic = st.text_input("Nhập chủ đề bài hát:")
+    
+    if st.button("Tạo lời bài hát"):
+        if topic.strip():
+            with st.spinner("🎶 Đang sáng tác lời nhạc..."):
+                lyrics = generate_lyrics(f"Viết lời bài hát về chủ đề: {topic}")
+                st.text_area("Lời bài hát:", lyrics, height=300)
+        else:
+            st.warning("Vui lòng nhập chủ đề bài hát!")
 
 # Nếu chọn "Classify", hiển thị nội dung này
 if menu == "Classify":
