@@ -71,6 +71,39 @@ with st.sidebar:
         }
     )
     
+if menu == "Create Lyric":
+    st.markdown("<h1 style='text-align: center; color: white;'>AI Lyric Generator</h1>", unsafe_allow_html=True)
+    
+    # Nhập API Key
+    api_key = st.text_input("🔑 Nhập OpenAI API Key:", type="password")
+    
+    # Nhập ý tưởng bài hát
+    user_idea = st.text_area("💡 Nhập ý tưởng bài hát:", placeholder="Nhập chủ đề, cảm xúc, hoặc dòng đầu tiên của bài hát...")
+    
+    # Nút tạo lời bài hát
+    if st.button("🎶 Generate Lyrics"):
+        if not api_key:
+            st.error("❌ Vui lòng nhập OpenAI API Key!")
+        elif not user_idea:
+            st.error("❌ Vui lòng nhập ý tưởng bài hát!")
+        else:
+            with st.spinner("🎤 AI đang sáng tác lời bài hát..."):
+                try:
+                    # Kết nối API OpenAI
+                    client = openai.OpenAI(api_key=api_key)
+                    response = client.completions.create(
+                        model="gpt-4",
+                        prompt=f"Viết lời bài hát dựa trên ý tưởng sau:\n{user_idea}\n\nLời bài hát:",
+                        max_tokens=200
+                    )
+                    lyrics = response.choices[0].text.strip()
+                    
+                    # Hiển thị kết quả
+                    st.success("🎼 Lời bài hát của bạn:")
+                    st.write(lyrics)
+
+                except openai.OpenAIError as e:
+                    st.error(f"❌ Lỗi API: {str(e)}")
 
 
 # Nếu chọn "Classify", hiển thị nội dung này
